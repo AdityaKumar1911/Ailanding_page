@@ -189,7 +189,7 @@ export default function AiBackground() {
         </svg>
 
         {/* Binary code effect */}
-        <div className="absolute inset-0">
+        {/* <div className="absolute inset-0">
           {binaryParticles.map((p, i) => (
             <motion.div
               key={`binary-${i}`}
@@ -206,7 +206,7 @@ export default function AiBackground() {
               {p.value}
             </motion.div>
           ))}
-        </div>
+        </div> */}
 
         {/* Circular data visualization */}
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] opacity-10">
