@@ -7,6 +7,7 @@ import { motion } from "framer-motion"
 import Link from "next/link"
 import RegistrationForm from "@/components/registration-form"
 import AnimatedText from "@/components/animated-text"
+import AiBackground from "@/components/ai-background"
 
 export default function Home() {
   return (
@@ -15,99 +16,9 @@ export default function Home() {
       <section className="relative h-screen flex items-center overflow-hidden">
         {/* Background elements */}
         <div className="absolute inset-0 bg-gray-950 z-0"></div>
-        <div className="absolute inset-0 bg-[url('https://res.cloudinary.com/dp2ghs6p6/image/upload/v1744741337/1744741215391-78ac283d_syybnj.png')] bg-cover bg-center opacity-10 z-0"></div>
 
-        {/* AI-themed background elements */}
-        <div className="absolute inset-0 z-0">
-          {/* Digital circuit pattern */}
-          <svg className="absolute inset-0 w-full h-full opacity-10" viewBox="0 0 100 100" preserveAspectRatio="none">
-            <defs>
-              <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse">
-                <path d="M 8 0 L 0 0 0 8" fill="none" stroke="rgba(147, 51, 234, 0.3)" strokeWidth="0.5"></path>
-              </pattern>
-              <pattern id="circuit" width="32" height="32" patternUnits="userSpaceOnUse">
-                <circle cx="16" cy="16" r="1.5" fill="rgba(147, 51, 234, 0.4)"></circle>
-                <path d="M 16 16 L 32 16" stroke="rgba(147, 51, 234, 0.3)" strokeWidth="0.5"></path>
-                <path d="M 16 16 L 16 32" stroke="rgba(59, 130, 246, 0.3)" strokeWidth="0.5"></path>
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)"></rect>
-            <rect width="100%" height="100%" fill="url(#circuit)"></rect>
-          </svg>
-
-          {/* Animated particles */}
-          <div className="absolute inset-0">
-            {Array.from({ length: 20 }).map((_, i) => (
-              <motion.div
-                key={i}
-                className="absolute w-1 h-1 bg-purple-500 rounded-full"
-                style={{
-                  left: `${Math.random() * 100}%`,
-                  top: `${Math.random() * 100}%`,
-                }}
-                animate={{
-                  opacity: [0.1, 0.5, 0.1],
-                  scale: [1, 1.5, 1],
-                }}
-                transition={{
-                  duration: 3 + Math.random() * 5,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: Math.random() * 5,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Digital wave effect */}
-          <motion.div
-            className="absolute bottom-0 left-0 w-full h-64 opacity-10"
-            style={{
-              background: "linear-gradient(180deg, transparent, rgba(147, 51, 234, 0.2))",
-            }}
-            animate={{
-              y: [0, -10, 0],
-            }}
-            transition={{
-              duration: 8,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          />
-
-          {/* Neural network nodes */}
-          <div className="absolute inset-0">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <motion.div
-                key={`node-${i}`}
-                className="absolute w-3 h-3 bg-blue-500 rounded-full opacity-20"
-                style={{
-                  left: `${20 + i * 15}%`,
-                  top: `${30 + (i % 3) * 15}%`,
-                }}
-                animate={{
-                  scale: [1, 1.2, 1],
-                  opacity: [0.2, 0.3, 0.2],
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Number.POSITIVE_INFINITY,
-                  delay: i * 0.5,
-                }}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Decorative elements */}
-        <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
-          <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-purple-900/20 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 w-full h-32 bg-gradient-to-t from-blue-900/20 to-transparent"></div>
-          <div className="absolute -top-[40%] -left-[10%] w-[70%] h-[70%] rounded-full bg-purple-900/10 blur-3xl"></div>
-          <div className="absolute -bottom-[30%] -right-[10%] w-[60%] h-[60%] rounded-full bg-blue-900/10 blur-3xl"></div>
-
-          {/* Grid pattern overlay */}
-          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0wIDBoNjB2NjBIMHoiLz48cGF0aCBkPSJNMzAgMzBoMzB2MzBIMzB6IiBzdHJva2Utb3BhY2l0eT0iLjAyIiBzdHJva2U9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjAyIiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTAgMzBoMzB2MzBIMHoiIHN0cm9rZS1vcGFjaXR5PSIuMDIiIHN0cm9rZT0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIuMDIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMCAwaDMwdjMwSDB6IiBzdHJva2Utb3BhY2l0eT0iLjAyIiBzdHJva2U9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjAyIiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTMwIDBoMzB2MzBIMzB6IiBzdHJva2Utb3BhY2l0eT0iLjAyIiBzdHJva2U9IiNmZmYiIGZpbGwtb3BhY2l0eT0iLjAyIiBmaWxsPSIjZmZmIi8+PC9nPjwvc3ZnPg==')]"></div>
-        </div>
+        {/* AI Background Component */}
+        <AiBackground />
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-16">
