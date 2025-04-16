@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useMemo } from "react"
 import { motion } from "framer-motion"
 
 export default function AiBackground() {
@@ -14,7 +14,6 @@ export default function AiBackground() {
     const ctx = canvas.getContext("2d")
     if (!ctx) return
 
-    // Set canvas dimensions
     const resizeCanvas = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
@@ -23,53 +22,51 @@ export default function AiBackground() {
     resizeCanvas()
     window.addEventListener("resize", resizeCanvas)
 
-    // Characters for the matrix rain
     const chars =
       "アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789"
     const fontSize = 14
     const columns = Math.floor(canvas.width / fontSize)
-
-    // Array to track the y position of each column
     const drops: number[] = []
     for (let i = 0; i < columns; i++) {
-      drops[i] = Math.floor(Math.random() * -100) // Start above the canvas
+      drops[i] = Math.floor(Math.random() * -100)
     }
 
-    // Drawing the characters
     const draw = () => {
-      // Add semi-transparent black background to create fade effect
       ctx.fillStyle = "rgba(0, 0, 0, 0.04)"
       ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-      // Set the color and font of the text
-      ctx.fillStyle = "rgba(147, 51, 234, 0.3)" // Purple with low opacity
+      ctx.fillStyle = "rgba(147, 51, 234, 0.3)"
       ctx.font = `${fontSize}px monospace`
 
-      // Draw each column
       for (let i = 0; i < drops.length; i++) {
-        // Get random character
         const text = chars[Math.floor(Math.random() * chars.length)]
-
-        // Draw the character
         ctx.fillText(text, i * fontSize, drops[i] * fontSize)
 
-        // Reset position if it's at the bottom or randomly
         if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
           drops[i] = 0
         }
 
-        // Move the drop down
         drops[i]++
       }
     }
 
-    // Animation loop
     const interval = setInterval(draw, 50)
 
     return () => {
       clearInterval(interval)
       window.removeEventListener("resize", resizeCanvas)
     }
+  }, [])
+
+  // Memoized binary particles (hydration safe)
+  const binaryParticles = useMemo(() => {
+    return Array.from({ length: 20 }).map(() => ({
+      left: `${Math.random() * 100}%`,
+      top: `${Math.random() * 100}%`,
+      value: Math.random() > 0.5 ? "1" : "0",
+      duration: 3 + Math.random() * 5,
+      delay: Math.random() * 5,
+    }))
   }, [])
 
   return (
@@ -162,50 +159,51 @@ export default function AiBackground() {
           )}
 
           {/* Diagonal connections */}
-          {Array.from({ length: 4 }).map((_, i) => (
-            <motion.line
-              key={`d-${i}`}
-              x1={`${10 + i * 20}%`}
-              y1={`${15 + Math.floor(i / 2) * 30}%`}
-              x2={`${30 + i * 20}%`}
-              y2={`${45 + Math.floor(i / 2) * 30}%`}
-              stroke="url(#lineGradient)"
-              strokeWidth="1"
-              strokeDasharray="5,5"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1 }}
-              transition={{
-                duration: 3,
-                repeat: Number.POSITIVE_INFINITY,
-                repeatType: "loop",
-                ease: "linear",
-                delay: i * 0.4,
-              }}
-            />
-          ))}
+          {Array.from({ length: 4 }).map((_, i) => {
+            const x1 = `${10 + i * 20}%`
+            const y1 = `${15 + Math.floor(i / 2) * 30}%`
+            const x2 = `${30 + i * 20}%`
+            const y2 = `${45 + Math.floor(i / 2) * 30}%`
+            return (
+              <motion.line
+                key={`d-${i}`}
+                x1={x1}
+                y1={y1}
+                x2={x2}
+                y2={y2}
+                stroke="url(#lineGradient)"
+                strokeWidth="1"
+                strokeDasharray="5,5"
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  repeatType: "loop",
+                  ease: "linear",
+                  delay: i * 0.4,
+                }}
+              />
+            )
+          })}
         </svg>
 
         {/* Binary code effect */}
         <div className="absolute inset-0">
-          {Array.from({ length: 20 }).map((_, i) => (
+          {binaryParticles.map((p, i) => (
             <motion.div
               key={`binary-${i}`}
               className="absolute text-xs font-mono text-blue-500/20"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
+              style={{ left: p.left, top: p.top }}
               initial={{ opacity: 0 }}
-              animate={{
-                opacity: [0, 0.7, 0],
-              }}
+              animate={{ opacity: [0, 0.7, 0] }}
               transition={{
-                duration: 3 + Math.random() * 5,
+                duration: p.duration,
                 repeat: Number.POSITIVE_INFINITY,
-                delay: Math.random() * 5,
+                delay: p.delay,
               }}
             >
-              {Math.random() > 0.5 ? "1" : "0"}
+              {p.value}
             </motion.div>
           ))}
         </div>
@@ -220,53 +218,24 @@ export default function AiBackground() {
               </linearGradient>
             </defs>
 
-            {/* Outer circle */}
-            <motion.circle
-              cx="100"
-              cy="100"
-              r="80"
-              fill="none"
-              stroke="url(#circleGradient)"
-              strokeWidth="0.5"
-              initial={{ pathLength: 0, rotate: 0 }}
-              animate={{ pathLength: 1, rotate: 360 }}
-              transition={{
-                pathLength: { duration: 3, repeat: Number.POSITIVE_INFINITY },
-                rotate: { duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-              }}
-            />
-
-            {/* Middle circle */}
-            <motion.circle
-              cx="100"
-              cy="100"
-              r="60"
-              fill="none"
-              stroke="url(#circleGradient)"
-              strokeWidth="0.5"
-              initial={{ pathLength: 0, rotate: 0 }}
-              animate={{ pathLength: 1, rotate: -360 }}
-              transition={{
-                pathLength: { duration: 4, repeat: Number.POSITIVE_INFINITY },
-                rotate: { duration: 25, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-              }}
-            />
-
-            {/* Inner circle */}
-            <motion.circle
-              cx="100"
-              cy="100"
-              r="40"
-              fill="none"
-              stroke="url(#circleGradient)"
-              strokeWidth="0.5"
-              initial={{ pathLength: 0, rotate: 0 }}
-              animate={{ pathLength: 1, rotate: 360 }}
-              transition={{
-                pathLength: { duration: 5, repeat: Number.POSITIVE_INFINITY },
-                rotate: { duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" },
-              }}
-            />
+            {/* Animated circles */}
+            {[80, 60, 40].map((r, i) => (
+              <motion.circle
+                key={`circle-${r}`}
+                cx="100"
+                cy="100"
+                r={r}
+                fill="none"
+                stroke="url(#circleGradient)"
+                strokeWidth="0.5"
+                initial={{ pathLength: 0, rotate: 0 }}
+                animate={{ pathLength: 1, rotate: i % 2 === 0 ? 360 : -360 }}
+                transition={{
+                  pathLength: { duration: 3 + i, repeat: Infinity },
+                  rotate: { duration: 30 - i * 5, repeat: Infinity, ease: "linear" },
+                }}
+              />
+            ))}
 
             {/* Radial lines */}
             {Array.from({ length: 12 }).map((_, i) => {
@@ -289,7 +258,7 @@ export default function AiBackground() {
                   animate={{ opacity: [0, 0.8, 0] }}
                   transition={{
                     duration: 3,
-                    repeat: Number.POSITIVE_INFINITY,
+                    repeat: Infinity,
                     delay: i * 0.25,
                   }}
                 />
